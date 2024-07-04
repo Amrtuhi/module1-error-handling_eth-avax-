@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract School {
+    struct Student {
+        string name;
+        uint age;
+        uint grade;
+    }
+
+    Student[] public students;
+    uint public enrollmentCount; // To keep track of the number of enrollments
+
+    function enrollStudent(string memory _name, uint _age, uint _grade) public {
+        // Require that the student's age is between 6 and 18 years.
+        require(_age >= 6 && _age <= 18, "Student age must be between 6 and 18.");
+
+        // Assert that the student's grade is appropriate (1 to 12).
+        assert(_grade >= 1 && _grade <= 12);
+
+        // Revert if the student's name is empty.
+        if (bytes(_name).length == 0) {
+            revert("Student name cannot be empty.");
+        }
+
+        // Enroll the student if all conditions are met.
+        students.push(Student(_name, _age, _grade));
+        enrollmentCount++; // Increment the enrollment count
+    }
+
+    function getStudent(uint index) public view returns (string memory, uint, uint) {
+        require(index < students.length, "Student index is out of bounds.");
+        Student memory student = students[index];
+        return (student.name, student.age, student.grade);
+    }
+}
